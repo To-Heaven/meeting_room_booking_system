@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/room_table.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>会议室预定</h1>
+            <hr>
+
+            <form>
+                {% csrf_token %}
+            <input type="text" readonly value="{{ today }}" id="datetimepicker">
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>会议室</th>
+                    <th>8:00</th>
+                    <th>9:00</th>
+                    <th>10:00</th>
+                    <th>11:00</th>
+                    <th>12:00</th>
+                    <th>13:00</th>
+                    <th>14:00</th>
+                    <th>15:00</th>
+                    <th>16:00</th>
+                    <th>17:00</th>
+                    <th>18:00</th>
+                    <th>19:00</th>
+                    <th>20:00</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for room, item in result_dict.items %}
+                    <tr id="{{ room.id }}" class="room">
+                        <td>{{ room.title }}</td>
+                        {% for period in period_list %}
+                            {% if period.0 in item.keys %}
+                                {% for k, v in item.items %}
+                                    {% if period.0 == k %}
+                                        <td id="{{ period.0 }}" class="has_ordered order" order_id="{{ v.id }}">{{ v.user }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <td id="{{ period.0 }}" class="order"></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    <div class="col-md-12">
+        <button class="btn btn-primary" id="submit">提交</button>
+    </div>
+    </div>
+</div>
+<div class="info">
+    <input type="hidden" id="username" value="{{ request.session.username }}">
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.fr.js"></script>
+<script src="/static/js/room_table.js"></script>
+</body>
+</html>
