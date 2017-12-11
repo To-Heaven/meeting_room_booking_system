@@ -4,6 +4,7 @@ import datetime
 from json import dumps, loads
 
 from room import models
+from room.forms import LoginForm
 
 
 def table_orders(request):
@@ -11,13 +12,6 @@ def table_orders(request):
         today = datetime.datetime.today()
         orders = models.Order.objects.filter(schedule_date=today)
         rooms = models.MeetingRoom.objects.all()
-        order_list = [(order, order.room) for order in orders]
-        #
-        temp = {
-            'room_obj': {
-                'period': 'order_obj'   # 当天的记录对象
-            }
-        }
 
         result_dict = {}
         for room in rooms:
@@ -25,39 +19,69 @@ def table_orders(request):
             for order in orders:
                 if order.room == room:
                     result_dict[room][order.period] = order
-        print(result_dict)
         return render(request, 'room_table.html', {
             "today": today.strftime('%Y-%m-%d'),
             "period_list": models.Order.period_list,
             "result_dict": result_dict
         })
 
-        # return render(request, 'room_table.html', {
-        #     "rooms": rooms,
-        #     "order_list": order_list,
-        #     "period_list": models.Order.period_list,
-        #     'today': today.strftime('%Y-%m-%d'),
-        # })
-
 
 def table_change(request, year=None, month=None, day=None):
     select_time = datetime.datetime(year=year, month=month, day=day)
     orders = models.Order.objects.filter(schedule_date=select_time)
     rooms = models.MeetingRoom.objects.all()
-    order_list = [(order, order.room) for order in orders]
+
+    result_dict = {}
+    for room in rooms:
+        result_dict[room] = {}
+        for order in orders:
+            if order.room == room:
+                result_dict[room][order.period] = order
     return render(request, 'room_table.html', {
-        "rooms": rooms,
-        "order_list": order_list,
+        "today": select_time.strftime('%Y-%m-%d'),
         "period_list": models.Order.period_list,
-        'today': select_time.strftime('%Y-%m-%d'),
+        "result_dict": result_dict
     })
+
+    # orders = models.Order.objects.filter(schedule_date=select_time)
+    # rooms = models.MeetingRoom.objects.all()
+    # order_list = [(order, order.room) for order in orders]
+    # return render(request, 'room_table.html', {
+    #     "rooms": rooms,
+    #     "order_list": order_list,
+    #     "period_list": models.Order.period_list,
+    #     'today': select_time.strftime('%Y-%m-%d'),
+    # })
 
 
 def login(request):
-    user = models.User.objects.get(username='ziawang', password='123')
-    request.session['id'] = user.id
-    request.session['username'] = user.username
-    return HttpResponse('login successful')
+    if request.method == 'GET':
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
+    elif request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = models.User.objects.filter(**form.cleaned_data)
+            if user:
+                data = {
+                    "success": True,
+                    "location_href": '/room/'
+                }
+                return HttpResponse(dumps(data))
+            else:
+                form.add_error(field='password', error='用户名或密码错误')
+                data = {
+                     "success": False,
+                     "form_errors": form.errors
+                }
+                return HttpResponse(dumps(data))
+        else:
+            data = {
+                "success": False,
+                "form_errors": form.errors
+            }
+            return HttpResponse(dumps(data))
+
 
 def commit_choice(request):
     data = loads(request.body.decode('utf-8'))
@@ -77,10 +101,6 @@ def commit_choice(request):
     models.Order.objects.bulk_create(order_list)
     response_data = {"success": True, "message": '预订成功'}
     return HttpResponse(dumps(response_data))
-
-
-
-
 
 
 def checkout(request, order_id=None):

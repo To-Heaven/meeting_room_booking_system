@@ -1,0 +1,22 @@
+.my-style{
+    margin-top: 100px;
+}
+
+
+#register{
+    text-decoration: none;
+}
+
+.my-display{
+    display: block;
+}
+
+
+.title{
+    margin-left: -35px;
+    font-size: 20px;
+    color: #904;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+

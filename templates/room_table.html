@@ -1,11 +1,12 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/css/room_table.css">
+    <link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/room_table.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datetimepicker/bootstrap-datetimepicker.min.css' %}">
 </head>
 <body>
 <div class="container">
@@ -16,10 +17,16 @@
 
             <form>
                 {% csrf_token %}
-            <input type="text" readonly value="{{ today }}" id="datetimepicker">
+                <div class="col-md-2 timer">
+                    <input type="text" readonly value="{{ today }}" id="datetimepicker" class="form-control">
+                </div>
             </form>
 
-            <table class="table table-bordered">
+            <div class="col-md-5">
+                <button class="btn btn-primary" id="submit">提交</button>
+            </div>
+
+            <table class="mytable table table-bordered text-center">
                 <thead>
                 <tr>
                     <th>会议室</th>
@@ -41,12 +48,13 @@
                 <tbody>
                 {% for room, item in result_dict.items %}
                     <tr id="{{ room.id }}" class="room">
-                        <td>{{ room.title }}</td>
+                        <td>{{ room.title }}(最大容纳{{ room.number_of_people }}人)</td>
                         {% for period in period_list %}
                             {% if period.0 in item.keys %}
                                 {% for k, v in item.items %}
                                     {% if period.0 == k %}
-                                        <td id="{{ period.0 }}" class="has_ordered order" order_id="{{ v.id }}">{{ v.user }}</td>
+                                        <td id="{{ period.0 }}" class="has_ordered order"
+                                            order_id="{{ v.id }}">{{ v.user }}</td>
                                     {% endif %}
                                 {% endfor %}
                             {% else %}
@@ -59,18 +67,16 @@
 
             </table>
         </div>
-    <div class="col-md-12">
-        <button class="btn btn-primary" id="submit">提交</button>
-    </div>
+
     </div>
 </div>
 <div class="info">
     <input type="hidden" id="username" value="{{ request.session.username }}">
 </div>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
-<script src="/static/js/bootstrap-datetimepicker.fr.js"></script>
-<script src="/static/js/room_table.js"></script>
+<script src="{% static '/js/jquery-1.12.4.min.js' %}"></script>
+<script src="{% static '/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static '/plugins/datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static '/plugins/datetimepicker/bootstrap-datetimepicker.zh-CN.js' %}"></script>
+<script src="{% static '/js/room_table.js' %}"></script>
 </body>
 </html>

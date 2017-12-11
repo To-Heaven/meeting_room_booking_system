@@ -1,33 +1,25 @@
-$.each($("table tr"), function () {
-    var num = 0;
-    $.each($(this).children(), function () {
-        num += 1;
-        if (num > 14) {
-            $(this).remove();
-        }
-    })
-});
-
-
+/*
+    初始化日历插件并绑定时间
+ */
 $('#datetimepicker').datetimepicker({
     format: 'yyyy/mm/dd',
     language: 'zh-CN',
     minView: "month",
     autoclose: true,
     startDate: new Date(),
-    todayBtn: true,
+    todayBtn: true
 }).on('changeDate', function () {
-    $(this).datetimepicker('hide');
-});
-
-$('#datetimepicker').change(function () {
     var new_date = $(this).val();
     var form = $("form");
-    form.attr('action', '/room/' + new_date)
+    form.attr('action', '/room/' + new_date);
     console.log(form);
+    console.log(form[0]);
     form[0].submit();
 });
 
+/*
+    使用Ajax提交"撤销曾经订单"请求
+ */
 $(".order").click(function () {
     var current_user = $("#username").val();
     var selected_val = $(this).text();
@@ -45,7 +37,7 @@ $(".order").click(function () {
                 success: function (data) {
                     data = JSON.parse(data);
                     if (data['success']){
-                        alert('取消预订成功')
+                        alert('取消预订成功');
                         that.removeClass('has_ordered');
                         that.text('');
                     }else {
@@ -53,9 +45,6 @@ $(".order").click(function () {
                     }
                 }
             });
-
-            // $(this).removeClass('has_ordered');
-            // $(this).text('');
         }
     }
     else {
@@ -64,6 +53,9 @@ $(".order").click(function () {
     }
 });
 
+/*
+    使用Ajax提交指定日期的预定
+ */
 $("#submit").click(function () {
     var data = {};
 
@@ -91,9 +83,7 @@ $("#submit").click(function () {
             }else {
                 alert('预订失败')
             }
-
         }
-
     })
 });
 

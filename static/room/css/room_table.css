@@ -1,7 +1,23 @@
-.has_ordered{
+.has_ordered {
     background-color: palevioletred;
 }
 
-.has_selected{
+.has_selected {
     background-color: #2fa8ec;
+}
+
+.timer {
+    margin-left: -15px;
+    margin-bottom: 15px;
+}
+
+.mytable thead th {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+}
+
+.mytable tbody td{
+    height: 50px;
+    line-height: 50px;
 }

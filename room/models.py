@@ -8,7 +8,7 @@ class User(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=32, verbose_name='用户名')
+    username = models.CharField(max_length=32, verbose_name='用户名', unique=True)
     password = models.CharField(max_length=32, verbose_name='密码')
 
     def __str__(self):
@@ -26,6 +26,7 @@ class MeetingRoom(models.Model):
 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=32, verbose_name='会议室名称')
+    number_of_people = models.IntegerField(verbose_name='会议室最大容纳人数', default=100)
 
     def __str__(self):
         return self.title
@@ -70,4 +71,4 @@ class Order(models.Model):
 
     class Meta:
         verbose_name_plural = '会议室预定表'
-        unique_together = (("room", "period", "schedule_date"),)
+        unique_together = (("room", "period", "schedule_date"), )
