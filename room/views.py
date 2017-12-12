@@ -43,16 +43,6 @@ def table_change(request, year=None, month=None, day=None):
         "result_dict": result_dict
     })
 
-    # orders = models.Order.objects.filter(schedule_date=select_time)
-    # rooms = models.MeetingRoom.objects.all()
-    # order_list = [(order, order.room) for order in orders]
-    # return render(request, 'room_table.html', {
-    #     "rooms": rooms,
-    #     "order_list": order_list,
-    #     "period_list": models.Order.period_list,
-    #     'today': select_time.strftime('%Y-%m-%d'),
-    # })
-
 
 def login(request):
     if request.method == 'GET':
@@ -61,8 +51,13 @@ def login(request):
     elif request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
+            auto_login = form.cleaned_data.pop('auto_login')
             user = models.User.objects.filter(**form.cleaned_data)
             if user:
+                request.session['username'] = user[0].username
+                request.session['id'] = user[0].id
+                if auto_login:
+                    request.session.set_expiry(60*60*24*30)
                 data = {
                     "success": True,
                     "location_href": '/room/'

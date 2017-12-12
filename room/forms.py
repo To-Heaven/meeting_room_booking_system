@@ -24,4 +24,5 @@ class LoginForm(BaseInfoForm):
     """
         用于用户登陆的form组件类
     """
-    pass
+    auto_login = fields.BooleanField(required=False,
+                                     widget=widgets.CheckboxInput(attrs={'value': 1}))
