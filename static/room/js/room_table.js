@@ -25,7 +25,7 @@ $(".order").click(function () {
     var selected_val = $(this).text();
     if (selected_val) {
         if (selected_val !== current_user) {
-            // 如果点击的是别人预定的
+            // 如果点击的是别人预定的, 后端也要验证
             alert('该会议室已被' + selected_val + '预订！')
         } else {
             // 如果再次点击之前自己预定的order，会清除
