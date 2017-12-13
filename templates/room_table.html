@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/room_table.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/datetimepicker/bootstrap-datetimepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/room_table.css' %}">
+    <link rel="stylesheet" href="{% static '/plugins/datetimepicker/bootstrap-datetimepicker.min.css' %}">
 </head>
 <body>
 <div class="container">
@@ -17,6 +17,7 @@
 
             <form>
                 {% csrf_token %}
+                <!-- 日历插件 -->
                 <div class="col-md-2 timer">
                     <input type="text" readonly value="{{ today }}" id="datetimepicker" class="form-control">
                 </div>
