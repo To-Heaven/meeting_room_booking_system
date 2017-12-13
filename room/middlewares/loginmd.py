@@ -3,7 +3,6 @@ from re import match
 from django.conf import settings
 from django.shortcuts import redirect
 
-from room import models
 
 class MiddlewareMixin:
     def __init__(self, get_response=None):
@@ -29,7 +28,7 @@ class LoginMiddleWare(MiddlewareMixin):
     def process_request(self, request):
         """ 在用户登陆前，对用户请求进行中间件验证
         Args:
-            当前请求对象
+            request:当前请求对象
         Return:
             None: 进入下一个中间件或视图函数
             rediect: 进入上一个中间件或wsgi，将响应返回给用户
